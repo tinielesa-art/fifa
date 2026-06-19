@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA 排名卡</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans TC', sans-serif; background: #000; }
+
+.bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; z-index: 0; }
+.bg-video.active { opacity: 0.28; }
+.bg-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1; }
+.card-wrap { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 48px; background: rgba(5,5,5,0.85); border-bottom: 1px solid #1e1e1e; backdrop-filter: blur(8px); }
+.card-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: #555; }
+.card-badge { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #333; }
+
+.rank-list { display: flex; flex-direction: column; flex: 1; }
+.rank-row { position: relative; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: default; transition: background 0.3s ease; }
+.rank-row:last-child { border-bottom: none; }
+.rank-row:hover { background: rgba(255,255,255,0.03); }
+.rank-row.highlight:hover { background: rgba(200,30,20,0.08); }
+
+.rank-content { display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 64px; }
+.rank-left { display: flex; align-items: center; gap: 24px; }
+
+.flag-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+.flag-circle { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); display: block; }
+.rank-row.highlight .flag-circle { border-color: rgba(192,57,43,0.6); box-shadow: 0 4px 20px rgba(192,57,43,0.3), inset 0 1px 0 rgba(255,255,255,0.15); }
+.flag-gloss { position: absolute; top: 2px; left: 8px; width: 48px; height: 24px; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 60%, transparent 100%); pointer-events: none; }
+
+.rank-country-code { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 4px; color: #555; margin-bottom: 6px; }
+.rank-country-name { font-size: 28px; font-weight: 700; color: #ccc; letter-spacing: 3px; }
+.rank-row.highlight .rank-country-name { color: #aaa; }
+
+.rank-number { font-family: 'DM Mono', monospace; font-size: 72px; font-weight: 500; color: #ddd; line-height: 1; letter-spacing: -2px; }
+.rank-row.highlight .rank-number { color: #e74c3c; font-size: 80px; }
+</style>
+</head>
+<body>
+
+<video id="bg-japan"   class="bg-video" autoplay muted loop playsinline><source src="GIF_Japan.mp4"  type="video/mp4"></video>
+<video id="bg-korea"   class="bg-video" autoplay muted loop playsinline><source src="GIF_Korea.mp4"  type="video/mp4"></video>
+<video id="bg-thailand" class="bg-video" autoplay muted loop playsinline><source src="GIF_Tha.mp4"   type="video/mp4"></video>
+<video id="bg-vietnam" class="bg-video" autoplay muted loop playsinline><source src="GIF_VIN.mp4"   type="video/mp4"></video>
+<video id="bg-taiwan"  class="bg-video" autoplay muted loop playsinline><source src="GIF_Taipei.mp4" type="video/mp4"></video>
+
+<div class="bg-overlay"></div>
+
+<div class="card-wrap">
+  <div class="card-header">
+    <span class="card-label">FIFA 世界排名</span>
+    <span class="card-badge">2026 世界盃賽季</span>
+  </div>
+  <div class="rank-list">
+
+    <div class="rank-row" data-bg="bg-japan">
+      <div class="rank-content">
+        <div class="rank-left">
+          <div class="flag-wrap"><img class="flag-circle" src="JAPAN.png" alt="日本"><div class="flag-gloss"></div></div>
+          <div><div class="rank-country-code">JPN　JAPAN</div><div class="rank-country-name">日本</div></div>
+        </div>
+        <div class="rank-number">#18</div>
+      </div>
+    </div>
+
+    <div class="rank-row" data-bg="bg-korea">
+      <div class="rank-content">
+        <div class="rank-left">
+          <div class="flag-wrap"><img class="flag-circle" src="Flag_of_South_Korea.svg.webp" alt="南韓"><div class="flag-gloss"></div></div>
+          <div><div class="rank-country-code">KOR　KOREA</div><div class="rank-country-name">韓國</div></div>
+        </div>
+        <div class="rank-number">#25</div>
+      </div>
+    </div>
+
+    <div class="rank-row" data-bg="bg-thailand">
+      <div class="rank-content">
+        <div class="rank-left">
+          <div class="flag-wrap"><img class="flag-circle" src="Thailand.png" alt="泰國"><div class="flag-gloss"></div></div>
+          <div><div class="rank-country-code">THA　THAILAND</div><div class="rank-country-name">泰國</div></div>
+        </div>
+        <div class="rank-number">#94</div>
+      </div>
+    </div>
+
+    <div class="rank-row" data-bg="bg-vietnam">
+      <div class="rank-content">
+        <div class="rank-left">
+          <div class="flag-wrap"><img class="flag-circle" src="vietnam.png" alt="越南"><div class="flag-gloss"></div></div>
+          <div><div class="rank-country-code">VIE　VIETNAM</div><div class="rank-country-name">越南</div></div>
+        </div>
+        <div class="rank-number">#99</div>
+      </div>
+    </div>
+
+    <div class="rank-row highlight" data-bg="bg-taiwan">
+      <div class="rank-content">
+        <div class="rank-left">
+          <div class="flag-wrap"><img class="flag-circle" src="TAIWAN.jpg" alt="台灣"><div class="flag-gloss"></div></div>
+          <div><div class="rank-country-code">TPE　TAIWAN</div><div class="rank-country-name">台灣</div></div>
+        </div>
+        <div class="rank-number">#174</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.rank-row[data-bg]').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.bg-video').forEach(v => v.classList.remove('active'));
+      const t = document.getElementById(row.dataset.bg);
+      if (t) t.classList.add('active');
+    });
+    row.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.bg-video').forEach(v => v.classList.remove('active'));
+    });
+  });
+</script>
+<a href="index.html" style="position:fixed;bottom:24px;right:24px;z-index:100;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:#444;text-decoration:none;border:1px solid #222;padding:10px 18px;border-radius:3px;background:rgba(5,5,5,0.8);backdrop-filter:blur(8px);transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='#ccc';this.style.borderColor='#444'" onmouseout="this.style.color='#444';this.style.borderColor='#222'">← BACK</a>
+</body>
+</html>

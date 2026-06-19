@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>職業球員卡</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans TC', sans-serif; background: #000; }
+
+.card-wrap { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 48px; background: rgba(5,5,5,0.95); border-bottom: 1px solid #1e1e1e; position: relative; z-index: 10; }
+.card-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: #555; }
+.card-badge { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #333; }
+
+.player-list { display: flex; flex-direction: column; flex: 1; }
+
+/* 日本、韓國列 */
+.player-row {
+  flex: 1;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 64px;
+  background: #0a0a0a;
+}
+
+/* 台灣列：左右切二 */
+.player-row.tw-row {
+  flex: 2;
+  padding: 0;
+  flex-direction: row;
+  align-items: stretch;
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.tw-half {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.tw-half:first-child {
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.tw-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0.45;
+}
+
+.tw-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5,5,5,0.3) 0%, rgba(5,5,5,0.75) 100%);
+}
+
+.tw-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  padding: 0 36px 32px;
+}
+
+/* 國旗光澤 */
+.flag-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; margin-bottom: 14px; }
+.flag-circle { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); display: block; }
+.flag-gloss { position: absolute; top: 2px; left: 6px; width: 40px; height: 20px; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 60%, transparent 100%); pointer-events: none; }
+
+.tw-gender { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 4px; color: #888; margin-bottom: 8px; }
+.tw-count { font-family: 'DM Mono', monospace; font-size: 42px; font-weight: 500; color: #e74c3c; line-height: 1; margin-bottom: 8px; }
+.tw-count-sub { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: #554; line-height: 1.7; }
+
+/* 左側資訊（日韓） */
+.player-left { display: flex; align-items: center; gap: 24px; }
+.flag-wrap-sm { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+.flag-circle-sm { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); display: block; }
+.flag-gloss-sm { position: absolute; top: 2px; left: 7px; width: 42px; height: 22px; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 60%, transparent 100%); pointer-events: none; }
+
+.player-country-code { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; color: #555; margin-bottom: 5px; }
+.player-country-name { font-size: 24px; font-weight: 700; color: #ccc; letter-spacing: 2px; }
+.player-count { font-family: 'DM Mono', monospace; font-size: 60px; font-weight: 500; color: #fff; line-height: 1; }
+.player-count span { font-size: 16px; color: #555; margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="card-wrap">
+  <div class="card-header">
+    <span class="card-label">職業足球員人數</span>
+    <span class="card-badge">Professional Footballers</span>
+  </div>
+
+  <div class="player-list">
+
+    <!-- 日本 -->
+    <div class="player-row" style="position:relative;overflow:hidden;">
+      <img style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.2;" src="Card2_JAPAN.jpg" alt="">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,5,0.88) 0%,rgba(5,5,5,0.35) 60%,rgba(5,5,5,0.75) 100%);"></div>
+      <div class="player-left" style="position:relative;z-index:2;">
+        <div class="flag-wrap-sm"><img class="flag-circle-sm" src="JAPAN.png" alt="日本"><div class="flag-gloss-sm"></div></div>
+        <div><div class="player-country-code">JP　JAPAN</div><div class="player-country-name">日本</div></div>
+      </div>
+      <div class="player-count" style="position:relative;z-index:2;text-align:right;"><div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:#555;margin-bottom:6px;">職業足球員</div>1,800<span>人</span></div>
+    </div>
+
+    <!-- 韓國 -->
+    <div class="player-row" style="position:relative;overflow:hidden;">
+      <img style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.2;" src="Card2_KOREA.jpg" alt="">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,5,0.88) 0%,rgba(5,5,5,0.35) 60%,rgba(5,5,5,0.75) 100%);"></div>
+      <div class="player-left" style="position:relative;z-index:2;">
+        <div class="flag-wrap-sm"><img class="flag-circle-sm" src="Flag_of_South_Korea.svg.webp" alt="南韓"><div class="flag-gloss-sm"></div></div>
+        <div><div class="player-country-code">KR　KOREA</div><div class="player-country-name">韓國</div></div>
+      </div>
+      <div class="player-count" style="position:relative;z-index:2;text-align:right;"><div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:#555;margin-bottom:6px;">職業足球員</div>800<span>人</span></div>
+    </div>
+
+    <!-- 台灣：左BOY右GIRL -->
+    <div class="player-row tw-row">
+
+      <div class="tw-half">
+        <img class="tw-photo" src="Taiepei_BOY.jpg" alt="台灣男足">
+        <div class="tw-overlay"></div>
+        <div class="tw-content">
+          <div class="flag-wrap"><img class="flag-circle" src="TAIWAN.jpg" alt="台灣"><div class="flag-gloss"></div></div>
+          <div class="tw-gender">TW　TAIWAN　男子</div>
+          <div class="tw-count">不到 50 人</div>
+          <div class="tw-count-sub">全職足球員<br>不需依靠額外兼職維持生計者</div>
+        </div>
+      </div>
+
+      <div class="tw-half">
+        <img class="tw-photo" src="Taiepei_Girl.jpg" alt="台灣女足">
+        <div class="tw-overlay"></div>
+        <div class="tw-content">
+          <div class="flag-wrap"><img class="flag-circle" src="TAIWAN.jpg" alt="台灣"><div class="flag-gloss"></div></div>
+          <div class="tw-gender">TW　TAIWAN　女子</div>
+          <div class="tw-count">不到 50 人</div>
+          <div class="tw-count-sub">全職足球員<br>不需依靠額外兼職維持生計者</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<a href="index.html" style="position:fixed;bottom:24px;right:24px;z-index:100;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:#444;text-decoration:none;border:1px solid #222;padding:10px 18px;border-radius:3px;background:rgba(5,5,5,0.8);backdrop-filter:blur(8px);transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='#ccc';this.style.borderColor='#444'" onmouseout="this.style.color='#444';this.style.borderColor='#222'">← BACK</a>
+</body>
+</html>

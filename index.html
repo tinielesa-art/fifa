@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣足球</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #000; font-family: 'Noto Sans TC', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; position: relative; overflow: hidden; }
+
+.bg-video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-video.active { opacity: 0.35; }
+
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.nav-title, .nav-btn { position: relative; z-index: 2; }
+
+.nav-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.nav-btn {
+  display: block;
+  width: 400px;
+  padding: 24px 36px;
+  background: #111214;
+  border: 1px solid #222;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: border-color 0.3s, background 0.3s;
+  cursor: pointer;
+}
+
+.nav-btn:hover { border-color: #444; background: #161618; }
+.nav-btn.red:hover { border-color: #c0392b; background: #1a0808; }
+
+.nav-btn-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.nav-btn-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ccc;
+  letter-spacing: 2px;
+}
+
+.nav-btn.red .nav-btn-title { color: #e74c3c; }
+</style>
+</head>
+<body>
+  <video class="bg-video active" id="vid1" src="B1.mp4" autoplay muted loop playsinline></video>
+  <video class="bg-video" id="vid2" src="B2.mp4" muted loop playsinline></video>
+  <div class="overlay"></div>
+
+  <script>
+    const vid1 = document.getElementById('vid1');
+    const vid2 = document.getElementById('vid2');
+    let current = 1;
+
+    setInterval(() => {
+      if (current === 1) {
+        vid2.play();
+        vid1.classList.remove('active');
+        vid2.classList.add('active');
+        current = 2;
+      } else {
+        vid1.play();
+        vid2.classList.remove('active');
+        vid1.classList.add('active');
+        current = 1;
+      }
+    }, 8000);
+  </script>
+
+  <div class="nav-title">台灣足球・數據卡</div>
+  <a class="nav-btn" href="card1_ranking.html">
+    <div class="nav-btn-label">CARD 01　FIFA 世界排名</div>
+    <div class="nav-btn-title">亞洲五國排名對比</div>
+  </a>
+  <a class="nav-btn red" href="card2_players.html">
+    <div class="nav-btn-label">CARD 02　職業足球員人數</div>
+    <div class="nav-btn-title">台灣 vs 日本 vs 韓國</div>
+  </a>
+</body>
+</html>
